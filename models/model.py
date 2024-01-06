@@ -50,8 +50,8 @@ class TaxoRec(nn.Module):
         tag_matrix = load_npz('data/' + args.dataset + '/item_tag_matrix.npz')
         tag_labels = tag_matrix.A
         tmp = np.sum(tag_labels, axis=1, keepdims=True)
-        tag_labels = tag_labels / (tmp+1)
-        # tag_labels = tag_labels / tmp
+        # tag_labels = tag_labels / (tmp+1)
+        tag_labels = tag_labels / tmp
         
         
         self.num_tags = tag_labels.shape[1]
