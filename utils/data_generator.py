@@ -44,8 +44,8 @@ class Data(object):
         self.user_item_csr = self.generate_rating_matrix([*self.train_dict.values()], self.num_users, self.num_items)
 
     def generate_adj(self):
-        # user_item = np.zeros((self.num_users, self.num_items)).astype(int)
-        user_item = np.zeros((self.num_users, self.num_items), dtype=np.float32)
+        user_item = np.zeros((self.num_users, self.num_items)).astype(int)
+        # user_item = np.zeros((self.num_users, self.num_items), dtype=np.float32)
         for i, v in self.train_dict.items():
             user_item[i][v] = 1
         coo_user_item = sp.coo_matrix(user_item)
