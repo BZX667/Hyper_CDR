@@ -19,7 +19,7 @@ import torch
 
 
 def train(model):
-    use_item_cl_loss = args.use_item_cl_loss
+    # use_item_cl_loss = args.use_item_cl_loss
     use_user_cl_loss = args.use_user_cl_loss
     
     save_path = 'data/' + args.dataset + '/' + args.model
