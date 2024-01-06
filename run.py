@@ -52,7 +52,7 @@ def train(model):
             model.train()
             optimizer.zero_grad()
             embeddings = model.encode(data.adj_train_norm) 
-            embeddings = torch.nan_to_num(embeddings)
+            # embeddings = torch.nan_to_num(embeddings)
             
             if tree and use_user_cl_loss:
                 train_loss, cluster_loss, item_cl_loss = model.compute_loss(embeddings, args.child_num, triples, tree, data)
