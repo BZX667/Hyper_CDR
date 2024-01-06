@@ -27,7 +27,7 @@ config_args = {
         'optim': ('rsgd', 'optimizer choice'),
         'lam': (0.1, 'lam'),
         'child_num': (3, 'the number of children'),
-        'use_item_cl_loss': (False, 'bool'),
+        'use_user_cl_loss': (False, 'bool'),
     },
     'data_config': {
         'dataset': ('Amazon-CD', 'which dataset to use'),
