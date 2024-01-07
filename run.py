@@ -178,7 +178,7 @@ if __name__ == '__main__':
     set_seed(args.seed)
 
     # === prepare data
-    data = Data(args.dataset, args.norm_adj, args.seed, args.test_ratio)
+    data = Data(args.dataset, args.norm_adj, args.seed, args.test_ratio, args.user_item_type)
     total_edges = data.adj_train.count_nonzero()
     args.n_nodes = data.num_users + data.num_items
     args.feat_dim = args.embedding_dim

@@ -11,10 +11,11 @@ from utils.helper import sparse_mx_to_torch_sparse_tensor, normalize
 
 
 class Data(object):
-    def __init__(self, dataset, norm_adj, seed, test_ratio):
+    def __init__(self, dataset, norm_adj, seed, test_ratio, user_item_type='int'):
         pkl_path = os.path.join('./data/' + dataset)
         self.pkl_path = pkl_path
         self.dataset = dataset
+        self.type = user_item_type
 
         self.user_item_list = self.load_pickle(os.path.join(pkl_path, 'user_item_list.pkl'))
 
@@ -43,9 +44,14 @@ class Data(object):
 
         self.user_item_csr = self.generate_rating_matrix([*self.train_dict.values()], self.num_users, self.num_items)
 
+
     def generate_adj(self):
-        user_item = np.zeros((self.num_users, self.num_items)).astype(int)
-        # user_item = np.zeros((self.num_users, self.num_items), dtype=np.float32)
+        if self.type == 'int':
+            user_item = np.zeros((self.num_users, self.num_items)).astype(int)
+        elif self.type == 'float32':
+            user_item = np.zeros((self.num_users, self.num_items), dtype=np.float32)
+        elif self.type == 'float64':
+            user_item = np.zeros((self.num_users, self.num_items), dtype=np.float64)
         for i, v in self.train_dict.items():
             user_item[i][v] = 1
         coo_user_item = sp.coo_matrix(user_item)
