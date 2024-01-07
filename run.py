@@ -50,6 +50,10 @@ def train(model):
         avg_origin_loss = 0.
         avg_cluster_loss = 0.
         avg_cl_loss = 0.
+        avg_pos_user = 0.
+        avg_neg_user = 0.
+        avg_pos_item = 0.
+        avg_neg_item = 0.
         # === batch training
         t = time.time()
         for batch in range(num_batches):
@@ -60,7 +64,7 @@ def train(model):
             # embeddings = torch.nan_to_num(embeddings)
             
             if tree and use_user_cl_loss:
-                train_loss, origin_loss, cluster_loss, item_cl_loss = model.compute_loss(embeddings, args.child_num, triples, tree, data)
+                train_loss, origin_loss, cluster_loss, item_cl_loss, pos_score_user, neg_score_user, pos_score_item, neg_score_item = model.compute_loss(embeddings, args.child_num, triples, tree, data)
             else:
                 train_loss = model.compute_loss(embeddings, args.child_num, triples, tree, data)
             
@@ -73,6 +77,10 @@ def train(model):
                 avg_origin_loss += origin_loss / num_batches
                 avg_cluster_loss += cluster_loss / num_batches
                 avg_cl_loss += item_cl_loss / num_batches
+                avg_pos_user += pos_score_user / num_batches
+                avg_pos_item += pos_score_item / num_batches
+                avg_neg_user += neg_score_user / num_batches
+                avg_neg_item += neg_score_item / num_batches
             else:
                 avg_loss += train_loss / num_batches
             
@@ -83,12 +91,20 @@ def train(model):
             avg_origin_loss = avg_origin_loss.detach().cpu().numpy()
             avg_cluster_loss = avg_cluster_loss.detach().cpu().numpy()
             avg_cl_loss = avg_cl_loss.detach().cpu().numpy()
+            avg_pos_user = avg_pos_user.detach().cpu().numpy()
+            avg_pos_item = avg_pos_item.detach().cpu().numpy()
+            avg_neg_user = avg_neg_user.detach().cpu().numpy()
+            avg_neg_item = avg_neg_item.detach().cpu().numpy()
             if (epoch + 1) % args.log_freq == 0:
                 print(" ".join(['Epoch: {:04d}'.format(epoch),
                             'avg_loss: {:.3f}'.format(avg_loss),
                             'origin_loss: {:.3f}'.format(avg_origin_loss),
                             'cluster_loss: {:.3f}'.format(avg_cluster_loss),
                             'cl_loss: {:.3f}'.format(avg_cl_loss),
+                            'avg_pos_user: {:.3f}'.format(avg_pos_user),
+                            'avg_pos_item: {:.3f}'.format(avg_pos_item),
+                            'avg_neg_user: {:.3f}'.format(avg_neg_user),
+                            'avg_neg_item: {:.3f}'.format(avg_neg_item),
                             'time: {:.4f}s'.format(time.time() - t)]), end=' ')
                 print("")
         

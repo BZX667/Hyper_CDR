@@ -151,6 +151,7 @@ class TaxoRec(nn.Module):
 
     def add_gaussian_noise(self, embeddings, std_dev):
         noise = torch.randn_like(embeddings) * std_dev
+        # noise = torch.dropout(noise, 0.5, train=True)
         noisy_embeddings = embeddings + noise
         return noisy_embeddings
     
@@ -206,14 +207,14 @@ class TaxoRec(nn.Module):
     #     random.shuffle(new_node_emb)
     #     return new_node_emb
 
-    def node_cl_loss(self, h, data, node_type):
+    def node_cl_loss(self, h, data, node_type, temperature, noise_coef):
         num_users, num_items = data.num_users, data.num_items
         if node_type == 'user':
             node_emb = h[:num_users, :]
         elif node_type == 'item':
             node_emb = h[np.arange(num_users, num_users + num_items), :]
 
-        node_emb_noise = self.add_gaussian_noise(node_emb, 0.01)
+        node_emb_noise = self.add_gaussian_noise(node_emb, noise_coef)
         pos_scores = self.decode2(node_emb, node_emb_noise)
         
         neg_emb = self.shuffle_vector(node_emb)
@@ -222,13 +223,13 @@ class TaxoRec(nn.Module):
         # BPR loss
         # loss = torch.relu(pos_scores - neg_scores)
         dis = neg_scores - pos_scores
-        loss = torch.sigmoid(dis / self.args.temperature)
+        loss = torch.sigmoid(dis / temperature)
         loss = torch.log(loss)
         loss = -torch.mean(loss)
 
         assert not torch.isnan(loss).any()
         assert not torch.isinf(loss).any()
-        return loss
+        return loss, torch.mean(pos_scores), torch.mean(neg_scores), torch.mean(dis)
     
 #     def node_cl_loss(self, h, data, node_type):
 #         num_users, num_items = data.num_users, data.num_items
@@ -313,11 +314,11 @@ class TaxoRec(nn.Module):
         #     return loss, cluster_loss, item_cl_loss
         
         if tree and self.use_user_cl_loss:
-            cl_loss1 = self.node_cl_loss(embeddings, data, 'user')
-            cl_loss2 = self.node_cl_loss(embeddings, data, 'item')
+            cl_loss1, pos_scores_1, neg_scores_1 = self.node_cl_loss(embeddings, data, 'user', self.args.user_temperature, 0.001)
+            cl_loss2, pos_scores_2, neg_scores_2 = self.node_cl_loss(embeddings, data, 'item', self.args.item_temperature, 0.002)
             cl_loss = cl_loss1 + cl_loss2
             loss += self.cl_loss_weight * cl_loss
-            return loss, origin_loss, cluster_loss, cl_loss
+            return loss, origin_loss, cluster_loss, cl_loss, pos_scores_1, pos_scores_2, neg_scores_1, neg_scores_2
         else:
             return loss
     
