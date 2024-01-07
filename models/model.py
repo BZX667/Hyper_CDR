@@ -72,6 +72,8 @@ class TaxoRec(nn.Module):
         self.lam = args.lam
         
         self.use_user_cl_loss = args.use_user_cl_loss
+        self.cluster_loss_weight = args.cluster_loss_weight
+        self.cl_loss_weight = args.cl_loss_weight
 
     def encode(self, adj):
         adj = adj.to(default_device())
@@ -306,7 +308,7 @@ class TaxoRec(nn.Module):
         origin_loss = loss
         if tree and self.lam > 0:
             cluster_loss = self.lam * self.cluster_loss(tree, child_num)
-            loss += cluster_loss
+            loss += self.cluster_loss_weight * cluster_loss
 
         # if tree and self.use_item_cl_loss:
         #     item_cl_loss = self.item_cl_loss(tree)
@@ -317,7 +319,7 @@ class TaxoRec(nn.Module):
             cl_loss1 = self.node_cl_loss(embeddings, data, 'user')
             cl_loss2 = self.node_cl_loss(embeddings, data, 'item')
             cl_loss = cl_loss1 + cl_loss2
-            loss += cl_loss
+            loss += self.cl_loss_weight * cl_loss
             return loss, origin_loss, cluster_loss, cl_loss
         else:
             return loss

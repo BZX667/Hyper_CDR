@@ -1,3 +1,5 @@
+from warnings import simplefilter
+simplefilter(action='ignore', category=FutureWarning)
 import time
 import traceback
 from datetime import datetime

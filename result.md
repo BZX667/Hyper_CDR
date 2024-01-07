@@ -27,3 +27,9 @@
 * epoch 800: best_eval [0.10339224819849321, 0.15165993658720225, 0.08103789742045815, 0.09719937428297928]
 * epoch 900: best_eval [0.10405844452298664, 0.15208140875137036, 0.0815952035659251, 0.09732309686446801]
 * epoch 1000: best_eval [0.10448771838482492, 0.15225503582717884, 0.08177141365646919, 0.09745211135175383]
+
+## exp result_2
+#### setting: user_item use np.float32 type
+#### run: python run.py --log-freq 10 --eval-freq 100 --user_item_type 'float32' --use_user_cl_loss True --cl_loss_weight 4 --cluster_loss_weight 2
+#### result:
+* epoch 100: 
