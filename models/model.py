@@ -299,13 +299,12 @@ class TaxoRec(nn.Module):
         neg_scores_list = [self.decode(embeddings, sampled_false_edges) for sampled_false_edges in
                            sampled_false_edges_list]
         neg_scores = torch.cat(neg_scores_list, dim=1)
-        loss = pos_scores - neg_scores + self.margin
-        loss[loss < 0] = 0
-        loss = torch.sum(loss)
-        
+        origin_loss = pos_scores - neg_scores + self.margin
+        origin_loss[origin_loss < 0] = 0
+        origin_loss = torch.sum(origin_loss)
+        loss = origin_loss.clone()
         assert not torch.isnan(loss).any()
         assert not torch.isinf(loss).any()
-        origin_loss = loss
         if tree and self.lam > 0:
             cluster_loss = self.lam * self.cluster_loss(tree, child_num)
             loss += self.cluster_loss_weight * cluster_loss
