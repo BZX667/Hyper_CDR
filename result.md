@@ -11,4 +11,5 @@
 #### setting: user_item use np.float64 type
 #### run: python run.py --log-freq 10 --eval-freq 100 --user_item_type 'float64'
 #### result:
-* epoch 400: best_eval [0.10146120538879812, 0.14805875330446436, 0.07960652983440203, 0.09489798464741171]
+* epoch 300: best_eval [0.09877597442800574, 0.14537741520462172, 0.07764199033965444, 0.09300452391135419]
+
