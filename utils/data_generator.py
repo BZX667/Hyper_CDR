@@ -47,10 +47,13 @@ class Data(object):
 
     def generate_adj(self):
         if self.type == 'int':
+            print("Using int type in user_item")
             user_item = np.zeros((self.num_users, self.num_items)).astype(int)
         elif self.type == 'float32':
+            print("Using float32 type in user_item")
             user_item = np.zeros((self.num_users, self.num_items), dtype=np.float32)
         elif self.type == 'float64':
+            print("Using float64 type in user_item")
             user_item = np.zeros((self.num_users, self.num_items), dtype=np.float64)
         for i, v in self.train_dict.items():
             user_item[i][v] = 1

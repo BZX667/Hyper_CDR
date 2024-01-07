@@ -14,7 +14,7 @@ config_args = {
         'log-freq': (1, 'how often to compute print train/val metrics (in epochs)'),
         'eval-freq': (20, 'how often to compute val metrics (in epochs)'),
         'device': (0, 'which device'),
-        'user_item_type': ('int', 'the type of user-item'),
+        'user_item_type': ('float32', 'the type of user-item'),
     },
     'model_config': {
         'model': ('TaxoRec', 'model name'),

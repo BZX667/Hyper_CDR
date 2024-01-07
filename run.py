@@ -76,19 +76,21 @@ def train(model):
             avg_loss = avg_loss.detach().cpu().numpy()
             cluster_loss = cluster_loss.detach().cpu().numpy()
             item_cl_loss = item_cl_loss.detach().cpu().numpy()
-            print(" ".join(['Epoch: {:04d}'.format(epoch),
-                        'avg_loss: {:.3f}'.format(avg_loss),
-                        'cluster_loss: {:.3f}'.format(cluster_loss),
-                        'cl_loss: {:.3f}'.format(item_cl_loss),
-                        'time: {:.4f}s'.format(time.time() - t)]), end=' ')
-            print("")
+            if (epoch + 1) % args.log_freq == 0:
+                print(" ".join(['Epoch: {:04d}'.format(epoch),
+                            'avg_loss: {:.3f}'.format(avg_loss),
+                            'cluster_loss: {:.3f}'.format(cluster_loss),
+                            'cl_loss: {:.3f}'.format(item_cl_loss),
+                            'time: {:.4f}s'.format(time.time() - t)]), end=' ')
+                print("")
         
         else:
             avg_loss = avg_loss.detach().cpu().numpy()
-            print(" ".join(['Epoch: {:04d}'.format(epoch),
+            if (epoch + 1) % args.log_freq == 0:
+                print(" ".join(['Epoch: {:04d}'.format(epoch),
                         'avg_loss: {:.3f}'.format(avg_loss),
                         'time: {:.4f}s'.format(time.time() - t)]), end=' ')
-            print("")
+                print("")
 
 
         if (epoch + 1) % args.eval_freq == 0:
