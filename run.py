@@ -176,6 +176,7 @@ def eval_rec(pred_matrix, data):
 
 if __name__ == '__main__':
     args = parser.parse_args()
+    print("args is:", args)
     import os
 
     os.environ['CUDA_VISIBLE_DEVICES'] = str(args.device)

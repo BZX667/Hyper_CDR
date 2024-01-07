@@ -31,6 +31,7 @@ config_args = {
         'use_user_cl_loss': (False, 'bool'),
         'cluster_loss_weight': (1, 'int'),
         'cl_loss_weight': (1, 'int'),
+        'temperature': (1, 'temperature for cl loss'),
     },
     'data_config': {
         'dataset': ('Amazon-CD', 'which dataset to use'),

@@ -221,10 +221,8 @@ class TaxoRec(nn.Module):
         
         # BPR loss
         # loss = torch.relu(pos_scores - neg_scores)
-        dis = pos_scores - neg_scores
-        loss = torch.sigmoid(dis)
-        
-        loss = torch.relu(loss)
+        dis = neg_scores - pos_scores
+        loss = torch.sigmoid(dis / self.args.temperature)
         loss = torch.log(loss)
         loss = -torch.mean(loss)
 
