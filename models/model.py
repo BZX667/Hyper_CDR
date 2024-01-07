@@ -178,6 +178,7 @@ class TaxoRec(nn.Module):
         
         assert not torch.isnan(emb_tag_out).any()
         assert not torch.isinf(emb_tag_out).any()
+        assert not torch.isnan(emb_tag_in).any()
         sqdist += self.manifold.dist2(emb_tag_in, emb_tag_out, keepdim=True).clamp_max(15.0)
         return sqdist
     
@@ -193,7 +194,9 @@ class TaxoRec(nn.Module):
         emb_tag_out = emb2[:, self.args.embedding_dim:]
         assert not torch.isnan(emb_tag_out).any()
         assert not torch.isinf(emb_tag_out).any()
+        assert not torch.isnan(emb_tag_in).any()
         sqdist += self.manifold.dist2(emb_tag_in, emb_tag_out, keepdim=True).clamp_max(15.0)
+        assert not torch.isnan(sqdist).any()
         return sqdist
 
     def shuffle_vector(self, node_emb):
@@ -216,20 +219,29 @@ class TaxoRec(nn.Module):
 
         node_emb_noise = self.add_gaussian_noise(node_emb, noise_coef)
         pos_scores = self.decode2(node_emb, node_emb_noise)
-        
+        assert not torch.isnan(pos_scores).any()
         neg_emb = self.shuffle_vector(node_emb)
         neg_scores = self.decode2(node_emb, neg_emb)
         
         # BPR loss
         # loss = torch.relu(pos_scores - neg_scores)
         dis = neg_scores - pos_scores
+        # print("pos_score is:", pos_scores)
+        # print("neg_score is:", neg_scores)
+        # print("temperature is:", temperature)
+        assert not torch.isnan(dis).any()
         loss = torch.sigmoid(dis / temperature)
+        # print("loss is:", loss[loss<0])
+        # print("loss is:", loss)
         loss = torch.log(loss)
+        # assert not torch.isnan(loss).any()
+        # print("[after log]loss is:", loss)
         loss = -torch.mean(loss)
+        # print("[after mean] loss is:", loss)
 
         assert not torch.isnan(loss).any()
         assert not torch.isinf(loss).any()
-        return loss, torch.mean(pos_scores), torch.mean(neg_scores), torch.mean(dis)
+        return loss, torch.mean(pos_scores), torch.mean(neg_scores)
     
 #     def node_cl_loss(self, h, data, node_type):
 #         num_users, num_items = data.num_users, data.num_items
@@ -314,8 +326,10 @@ class TaxoRec(nn.Module):
         #     return loss, cluster_loss, item_cl_loss
         
         if tree and self.use_user_cl_loss:
-            cl_loss1, pos_scores_1, neg_scores_1 = self.node_cl_loss(embeddings, data, 'user', self.args.user_temperature, 0.001)
-            cl_loss2, pos_scores_2, neg_scores_2 = self.node_cl_loss(embeddings, data, 'item', self.args.item_temperature, 0.002)
+            # print('user.....')
+            cl_loss1, pos_scores_1, neg_scores_1 = self.node_cl_loss(embeddings, data, 'user', self.args.user_temperature, 0.01)
+            # print("item....")
+            cl_loss2, pos_scores_2, neg_scores_2 = self.node_cl_loss(embeddings, data, 'item', self.args.item_temperature, 0.01)
             cl_loss = cl_loss1 + cl_loss2
             loss += self.cl_loss_weight * cl_loss
             return loss, origin_loss, cluster_loss, cl_loss, pos_scores_1, pos_scores_2, neg_scores_1, neg_scores_2

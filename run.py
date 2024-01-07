@@ -17,6 +17,7 @@ from utils.sampler import WarpSampler
 from utils.taxogen import build_tree_gen
 import itertools, heapq
 import torch
+torch.set_printoptions(profile='full')
 
 
 
@@ -64,7 +65,7 @@ def train(model):
             # embeddings = torch.nan_to_num(embeddings)
             
             if tree and use_user_cl_loss:
-                train_loss, origin_loss, cluster_loss, item_cl_loss, pos_score_user, neg_score_user, pos_score_item, neg_score_item = model.compute_loss(embeddings, args.child_num, triples, tree, data)
+                train_loss, origin_loss, cluster_loss, item_cl_loss, pos_score_user, pos_score_item, neg_score_user, neg_score_item = model.compute_loss(embeddings, args.child_num, triples, tree, data)
             else:
                 train_loss = model.compute_loss(embeddings, args.child_num, triples, tree, data)
             

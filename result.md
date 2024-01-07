@@ -90,4 +90,35 @@
 
 ## exp result_7
 #### setting: user_item use np.float32 type, neg_score - pos_score in cl_loss
-#### run: python run.py --log-freq 20 --eval-freq 100 --user_item_type 'float32' --use_user_cl_loss True --cl_loss_weight 20 --cluster_loss_weight 7 --user_temperature 0.01 --item_temperature 0.1
+#### run: python run.py --log-freq 20 --eval-freq 100 --user_item_type 'float32' --use_user_cl_loss True --cl_loss_weight 20 --cluster_loss_weight 7 --user_temperature 0.05 --item_temperature 0.1
+* epoch 100: best_eval [0.08860113147393184, 0.12836697710473247, 0.06912999597324361, 0.08223782919598137]
+* epoch 200: best_eval [0.09764343169433305, 0.141463822852218, 0.07613515285031032, 0.09057731368732065]
+* epoch 300: best_eval [0.10058903156265452, 0.1469167178809938, 0.07864399150696935, 0.09390389303014585]
+
+## exp result_8
+#### setting: user_item use np.float32 type, neg_score - pos_score in cl_loss
+#### run: python run.py --log-freq 20 --eval-freq 100 --user_item_type 'float32' --use_user_cl_loss True --cl_loss_weight 20 --cluster_loss_weight 7 --user_temperature 0.1 --item_temperature 0.1
+* epoch 100: best_eval [0.08670591457150488, 0.12749803325632492, 0.06761686854073247, 0.08104962049257342]
+* epoch 200: best_eval [0.09563586771900649, 0.138627772656863, 0.0745536713579106, 0.08864213455839189]
+* epoch 400: best_eval [0.10026748465779217, 0.14762703693582707, 0.0778416147025326, 0.09334429089084445]
+* epoch 500: best_eval [0.1013302116492099, 0.14762703693582707, 0.07845563034907636, 0.09334429089084445]
+* epoch 600: best_eval [0.10154588593763957, 0.14824982229089545, 0.07870648017950084, 0.09405083371820436]
+* epoch 700: best_eval [0.10260714806667258, 0.14886916054624985, 0.07906583180885977, 0.09429700754717354]
+* epoch 900: best_eval [0.10260714806667258, 0.14984552201893583, 0.07906583180885977, 0.09482898443976373]
+
+## exp result_9
+#### setting: user_item use np.float32 type, neg_score - pos_score in cl_loss, noise=0.01
+#### run: python run.py --log-freq 20 --eval-freq 100 --user_item_type 'float32' --use_user_cl_loss True --cl_loss_weight 20 --cluster_loss_weight 7 --user_temperature 0.1 --item_temperature 0.1
+* epoch 100: best_eval [0.0887004493703063, 0.12847998542763517, 0.06925181221560103, 0.08235757647005358]
+* epoch 200: best_eval [0.09750177005304146, 0.141686860662989, 0.07615395088232892, 0.09069077463387143]
+* epoch 300: best_eval [0.10074724570266358, 0.1472439066280584, 0.07883841882202457, 0.09414660571716184]
+* epoch 400: best_eval [0.10219205484914297, 0.14969559991286746, 0.0799471628157793, 0.09552089103827675]
+* epoch 500: best_eval [0.10271585832021238, 0.15086880466868977, 0.08041584767828533, 0.09619349862663872]
+* epoch 600: best_eval [0.10367282168923307, 0.15106327479659254, 0.08107046906727725, 0.0967044452894305]
+* epoch 700: best_eval [0.10409342146317649, 0.15163905467058864, 0.08143822503374079, 0.09709817319063292]
+* epoch 800: best_eval [0.10470300624742952, 0.1520022466563941, 0.08206911806876004, 0.09760273184823011]
+* epoch 1000: best_eval [0.10470300624742952, 0.1520271401442179, 0.08206911806876004, 0.0977445740176651]
+
+## exp result_10
+#### setting: user_item use np.float32 type, neg_score - pos_score in cl_loss, noise=0.01
+#### run: python run.py --log-freq 20 --eval-freq 100 --user_item_type 'float32' --use_user_cl_loss True --cl_loss_weight 4 --cluster_loss_weight 7 --user_temperature 0.1 --item_temperature 0.1
