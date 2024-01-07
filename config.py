@@ -29,6 +29,8 @@ config_args = {
         'lam': (0.1, 'lam'),
         'child_num': (3, 'the number of children'),
         'use_user_cl_loss': (False, 'bool'),
+        'cluster_loss_weight': (1, 'int'),
+        'cl_loss_weight': (1, 'int'),
     },
     'data_config': {
         'dataset': ('Amazon-CD', 'which dataset to use'),

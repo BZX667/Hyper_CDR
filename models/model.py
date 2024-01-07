@@ -303,7 +303,7 @@ class TaxoRec(nn.Module):
         
         assert not torch.isnan(loss).any()
         assert not torch.isinf(loss).any()
-
+        origin_loss = loss
         if tree and self.lam > 0:
             cluster_loss = self.lam * self.cluster_loss(tree, child_num)
             loss += cluster_loss
@@ -318,7 +318,7 @@ class TaxoRec(nn.Module):
             cl_loss2 = self.node_cl_loss(embeddings, data, 'item')
             cl_loss = cl_loss1 + cl_loss2
             loss += cl_loss
-            return loss, cluster_loss, cl_loss
+            return loss, origin_loss, cluster_loss, cl_loss
         else:
             return loss
     
