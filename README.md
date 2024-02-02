@@ -21,11 +21,16 @@ code to implement Hyperbolic gcn (```encoders.py, hyp_layers.py```)
 
 ### utils
 
-```data_generator.py``` read and organize data \n
-```helper.py``` some method for helping preprocess data or set seeds and devices \n
-```sampler.py``` a parallel sampler to sample batches for training \n
-```taxogen.py``` build taxonomy \n
-```train_utils.py``` read and parse the config arguments \n
+```data_generator.py``` read and organize data  
+
+```helper.py``` some method for helping preprocess data or set seeds and devices  
+
+```sampler.py``` a parallel sampler to sample batches for training  
+
+```taxogen.py``` build taxonomy  
+
+```train_utils.py``` read and parse the config arguments  
+
 
 ## Example to run the codes
 
