@@ -2,8 +2,8 @@
 This repository contains a implementation of Hyper_CDR
 
 ## Environment Setup
-1. Pytorch 1.8.1
-2. Python 3.7.3
+1. Pytorch 2.0
+2. Python 3.7
 
 ## Guideline
 
