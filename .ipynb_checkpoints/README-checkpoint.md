@@ -15,22 +15,17 @@ Amazon Book
 
 ### models
 
-The implementation of model(```model.py```); 
+The implementation of model(```model.py```);  
 
-code to implement Hyperbolic gcn (```encoders.py, hyp_layers.py```)
+code to implement Hyperbolic gcn (```encoders.py, hyp_layers.py```)  
 
 ### utils
 
 ```data_generator.py``` read and organize data  
-
 ```helper.py``` some method for helping preprocess data or set seeds and devices  
-
 ```sampler.py``` a parallel sampler to sample batches for training  
-
 ```taxogen.py``` build taxonomy  
-
 ```train_utils.py``` read and parse the config arguments  
-
 
 ## Example to run the codes
 
