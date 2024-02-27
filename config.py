@@ -41,6 +41,7 @@ config_args = {
     'data_config': {
         'dataset_tgt': ('Amazon-CD', 'target domain data'),
         'dataset_src': ('Amazon-Movie', 'source domain data'),
+        'use_item_cl_loss': (False, 'bool'),
         'num_neg': (1, 'number of negative samples'),
         'test_ratio': (0.2, 'proportion of test edges for link prediction'),
         'norm_adj': ('True', 'whether to row-normalize the adjacency matrix'),

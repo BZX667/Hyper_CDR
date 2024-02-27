@@ -13,22 +13,34 @@ from geoopt import ManifoldParameter
 import models.encoders as encoders
 import time
 import random
+<<<<<<< HEAD
 import json
 import pandas as pd
 import torch.nn.functional as F
+=======
+
+>>>>>>> 48d15d6 (Add files via upload)
 # # 设置随机种子
 # seed = 42
 # torch.manual_seed(seed)
 # torch.cuda.manual_seed(seed)
 # torch.backends.cudnn.deterministic = True
 # torch.backends.cudnn.benchmark = False
+<<<<<<< HEAD
 # torch.autograd.set_detect_anomaly(True)
+=======
+
+>>>>>>> 48d15d6 (Add files via upload)
 eps = 1e-15
 
 
 class TaxoRec(nn.Module):
 
+<<<<<<< HEAD
     def __init__(self, users_items, args, dataset):
+=======
+    def __init__(self, users_items, args):
+>>>>>>> 48d15d6 (Add files via upload)
         super(TaxoRec, self).__init__()
 
         self.c = torch.tensor([args.c]).to(default_device())
@@ -49,7 +61,11 @@ class TaxoRec(nn.Module):
         self.embedding.weight = nn.Parameter(self.manifold.expmap0(self.embedding.state_dict()['weight']), True)
         self.embedding.weight = ManifoldParameter(self.embedding.weight, self.manifold, True)
 
+<<<<<<< HEAD
         tag_matrix = load_npz('data/' + dataset + '/item_tag_matrix.npz')
+=======
+        tag_matrix = load_npz('data/' + args.dataset + '/item_tag_matrix.npz')
+>>>>>>> 48d15d6 (Add files via upload)
         tag_labels = tag_matrix.A
         tmp = np.sum(tag_labels, axis=1, keepdims=True)
         tag_labels = tag_labels / (tmp+1)
@@ -74,10 +90,13 @@ class TaxoRec(nn.Module):
         self.lam = args.lam
         
         self.use_user_cl_loss = args.use_user_cl_loss
+<<<<<<< HEAD
         self.cluster_loss_weight = args.cluster_loss_weight
         self.cl_loss_weight = args.cl_loss_weight
         self.trans_loss = args.trans_loss
         self.trans_epoch = args.trans_epoch
+=======
+>>>>>>> 48d15d6 (Add files via upload)
 
     def encode(self, adj):
         adj = adj.to(default_device())
@@ -101,6 +120,10 @@ class TaxoRec(nn.Module):
         h = torch.cat([h_in, h_gr], dim=-1)
         return h
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 48d15d6 (Add files via upload)
     def lorentz_factor(self, x, dim=-1, keepdim=False):
         """
         Parameters
@@ -154,7 +177,10 @@ class TaxoRec(nn.Module):
 
     def add_gaussian_noise(self, embeddings, std_dev):
         noise = torch.randn_like(embeddings) * std_dev
+<<<<<<< HEAD
         # noise = torch.dropout(noise, 0.5, train=True)
+=======
+>>>>>>> 48d15d6 (Add files via upload)
         noisy_embeddings = embeddings + noise
         return noisy_embeddings
     
@@ -181,7 +207,10 @@ class TaxoRec(nn.Module):
         
         assert not torch.isnan(emb_tag_out).any()
         assert not torch.isinf(emb_tag_out).any()
+<<<<<<< HEAD
         assert not torch.isnan(emb_tag_in).any()
+=======
+>>>>>>> 48d15d6 (Add files via upload)
         sqdist += self.manifold.dist2(emb_tag_in, emb_tag_out, keepdim=True).clamp_max(15.0)
         return sqdist
     
@@ -197,9 +226,13 @@ class TaxoRec(nn.Module):
         emb_tag_out = emb2[:, self.args.embedding_dim:]
         assert not torch.isnan(emb_tag_out).any()
         assert not torch.isinf(emb_tag_out).any()
+<<<<<<< HEAD
         assert not torch.isnan(emb_tag_in).any()
         sqdist += self.manifold.dist2(emb_tag_in, emb_tag_out, keepdim=True).clamp_max(15.0)
         assert not torch.isnan(sqdist).any()
+=======
+        sqdist += self.manifold.dist2(emb_tag_in, emb_tag_out, keepdim=True).clamp_max(15.0)
+>>>>>>> 48d15d6 (Add files via upload)
         return sqdist
 
     def shuffle_vector(self, node_emb):
@@ -213,6 +246,7 @@ class TaxoRec(nn.Module):
     #     random.shuffle(new_node_emb)
     #     return new_node_emb
 
+<<<<<<< HEAD
     def node_cl_loss(self, h, data, node_type, temperature, noise_coef, embeddings_noise):
         num_users, num_items = data.num_users, data.num_items
         if node_type == 'user':
@@ -226,10 +260,23 @@ class TaxoRec(nn.Module):
         pos_scores = self.decode2(node_emb, node_emb_noise)
         # pos_scores = self.decode2(node_emb, node_emb_graphdropout)
         assert not torch.isnan(pos_scores).any()
+=======
+    def node_cl_loss(self, h, data, node_type):
+        num_users, num_items = data.num_users, data.num_items
+        if node_type == 'user':
+            node_emb = h[:num_users, :]
+        elif node_type == 'item':
+            node_emb = h[np.arange(num_users, num_users + num_items), :]
+
+        node_emb_noise = self.add_gaussian_noise(node_emb, 0.01)
+        pos_scores = self.decode2(node_emb, node_emb_noise)
+        
+>>>>>>> 48d15d6 (Add files via upload)
         neg_emb = self.shuffle_vector(node_emb)
         neg_scores = self.decode2(node_emb, neg_emb)
         
         # BPR loss
+<<<<<<< HEAD
         dis = pos_scores-neg_scores + 0.5
         dis = dis/temperature
         loss = torch.relu(dis)
@@ -251,6 +298,48 @@ class TaxoRec(nn.Module):
         assert not torch.isnan(loss).any()
         assert not torch.isinf(loss).any()
         return loss, torch.sum(pos_scores), torch.sum(neg_scores)
+=======
+        # loss = torch.relu(pos_scores - neg_scores)
+        dis = pos_scores - neg_scores + self.margin
+        loss = torch.sigmoid(dis)
+        
+        loss = torch.relu(loss)
+        loss = torch.log(loss)
+        loss = -torch.mean(loss)
+
+        assert not torch.isnan(loss).any()
+        assert not torch.isinf(loss).any()
+        return loss
+    
+#     def node_cl_loss(self, h, data, node_type):
+#         num_users, num_items = data.num_users, data.num_items
+#         if node_type == 'user':
+#             node_emb = h[:num_users, :]
+#         elif node_type == 'item':
+#             node_emb = h[np.arange(num_users, num_users + num_items), :]
+
+#         node_emb_noise = self.add_gaussian_noise(node_emb, 0.01)
+#         pos_scores = self.decode2(node_emb, node_emb_noise)
+        
+#         neg_emb = self.shuffle_vector(node_emb)
+#         neg_scores = self.decode2(node_emb, neg_emb)
+        
+#         #infoNCE loss
+#         pos_scores = torch.exp(pos_scores)
+#         neg_scores = torch.exp(neg_scores)
+#         # print(pos_scores, neg_scores)
+#         loss = torch.log(torch.sum(neg_scores)/torch.sum(pos_scores))
+          
+# #         dis = pos_scores - neg_scores + self.margin
+# #         loss = torch.sigmoid(dis)
+# #         loss = torch.relu(loss)
+# #         loss = torch.log(loss)
+# #         loss = -torch.mean(loss)
+
+#         assert not torch.isnan(loss).any()
+#         assert not torch.isinf(loss).any()
+#         return loss
+>>>>>>> 48d15d6 (Add files via upload)
     
     
     def cluster_loss(self, tree, child_num=5):
@@ -277,6 +366,7 @@ class TaxoRec(nn.Module):
                 loss += ((node_terms - center) ** 2).sum()
         return loss
 
+<<<<<<< HEAD
     def find_first_order_neighbors(self, adj_csr, user_index):
         neighbor_indices = adj_csr[user_index].indices
         return neighbor_indices[:-1]
@@ -408,12 +498,18 @@ class TaxoRec(nn.Module):
         
         
     def compute_loss(self, embeddings, child_num, triples, tree, data, embeddings_noise, embeddings_trans, activate_trans, neighbor_neg, neighbor_tgt, neighbor_src, epoch):
+=======
+    
+    
+    def compute_loss(self, embeddings, child_num, triples, tree, data):
+>>>>>>> 48d15d6 (Add files via upload)
         assert not torch.isnan(triples).any()
         triples = triples.to(default_device())
         train_edges = triples[:, [0, 1]]
 
         sampled_false_edges_list = [triples[:, [0, 2 + i]] for i in range(self.args.num_neg)]
         pos_scores = self.decode(embeddings, train_edges)
+<<<<<<< HEAD
         neg_scores_list = [self.decode(embeddings, sampled_false_edges) for sampled_false_edges in
                            sampled_false_edges_list]
         neg_scores = torch.cat(neg_scores_list, dim=1)
@@ -459,6 +555,37 @@ class TaxoRec(nn.Module):
         
         else:
             return loss
+=======
+
+        neg_scores_list = [self.decode(embeddings, sampled_false_edges) for sampled_false_edges in
+                           sampled_false_edges_list]
+        neg_scores = torch.cat(neg_scores_list, dim=1)
+        loss = pos_scores - neg_scores + self.margin
+        loss[loss < 0] = 0
+        loss = torch.sum(loss)
+        
+        assert not torch.isnan(loss).any()
+        assert not torch.isinf(loss).any()
+
+        if tree and self.lam > 0:
+            cluster_loss = self.lam * self.cluster_loss(tree, child_num)
+            loss += cluster_loss
+
+        # if tree and self.use_item_cl_loss:
+        #     item_cl_loss = self.item_cl_loss(tree)
+        #     loss += item_cl_loss
+        #     return loss, cluster_loss, item_cl_loss
+        
+        if tree and self.use_user_cl_loss:
+            cl_loss1 = self.node_cl_loss(embeddings, data, 'user')
+            cl_loss2 = self.node_cl_loss(embeddings, data, 'item')
+            cl_loss = cl_loss1 + cl_loss2
+            loss += cl_loss
+            return loss, cluster_loss, cl_loss
+        else:
+            return loss
+    
+>>>>>>> 48d15d6 (Add files via upload)
 
 
     def predict(self, h, data):
@@ -475,4 +602,8 @@ class TaxoRec(nn.Module):
             sqdist += self.manifold.dist2(emb_tag_in, emb_tag_out)
             probs = sqdist.detach().cpu().numpy() * -1
             probs_matrix[i] = np.reshape(probs, [-1, ])
+<<<<<<< HEAD
         return probs_matrix
+=======
+        return probs_matrix
+>>>>>>> 48d15d6 (Add files via upload)

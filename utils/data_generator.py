@@ -1,7 +1,10 @@
 import os
 import pickle as pkl
 import time
+<<<<<<< HEAD
 import random
+=======
+>>>>>>> 48d15d6 (Add files via upload)
 
 import numpy as np
 import scipy.sparse as sp
@@ -12,16 +15,26 @@ from utils.helper import sparse_mx_to_torch_sparse_tensor, normalize
 
 
 class Data(object):
+<<<<<<< HEAD
     def __init__(self, dataset, norm_adj, seed, test_ratio, user_item_type='int', dropout=0):
         pkl_path = os.path.join('./data/' + dataset)
         self.pkl_path = pkl_path
         self.dataset = dataset
         self.type = user_item_type
+=======
+    def __init__(self, dataset, norm_adj, seed, test_ratio):
+        pkl_path = os.path.join('./data/' + dataset)
+        self.pkl_path = pkl_path
+        self.dataset = dataset
+>>>>>>> 48d15d6 (Add files via upload)
 
         self.user_item_list = self.load_pickle(os.path.join(pkl_path, 'user_item_list.pkl'))
 
         self.train_dict, self.test_dict = self.split_data_randomly(self.user_item_list, test_ratio, seed)
+<<<<<<< HEAD
         self.dropout = dropout
+=======
+>>>>>>> 48d15d6 (Add files via upload)
 
         # write split to disk
         with open(os.path.join(pkl_path, 'train.pkl'), 'wb') as f:
@@ -30,11 +43,19 @@ class Data(object):
             pkl.dump(self.test_dict, f)
         self.num_users, self.num_items = len(self.user_item_list), max([max(x) for x in self.user_item_list]) + 1
 
+<<<<<<< HEAD
         self.adj_train, user_item = self.generate_adj(dropout)
 
         if eval(norm_adj):
             self.adj_train_norm_matrix = normalize(self.adj_train + sp.eye(self.adj_train.shape[0]))
             self.adj_train_norm = sparse_mx_to_torch_sparse_tensor(self.adj_train_norm_matrix)
+=======
+        self.adj_train, user_item = self.generate_adj()
+
+        if eval(norm_adj):
+            self.adj_train_norm = normalize(self.adj_train + sp.eye(self.adj_train.shape[0]))
+            self.adj_train_norm = sparse_mx_to_torch_sparse_tensor(self.adj_train_norm)
+>>>>>>> 48d15d6 (Add files via upload)
 
         print('num_users %d, num_items %d' % (self.num_users, self.num_items))
         print('adjacency matrix shape: ', self.adj_train.shape)
@@ -46,6 +67,7 @@ class Data(object):
 
         self.user_item_csr = self.generate_rating_matrix([*self.train_dict.values()], self.num_users, self.num_items)
 
+<<<<<<< HEAD
 
     def generate_adj(self, dropout):
         if self.type == 'int':
@@ -61,6 +83,13 @@ class Data(object):
             user_item[i][v] = 1
             if random.random() < dropout:
                 user_item[i][v] = 0
+=======
+    def generate_adj(self):
+        # user_item = np.zeros((self.num_users, self.num_items)).astype(int)
+        user_item = np.zeros((self.num_users, self.num_items), dtype=np.float32)
+        for i, v in self.train_dict.items():
+            user_item[i][v] = 1
+>>>>>>> 48d15d6 (Add files via upload)
         coo_user_item = sp.coo_matrix(user_item)
         start = time.time()
         print('generating adj csr... ')
@@ -84,8 +113,13 @@ class Data(object):
         train_dict = {}
         test_dict = {}
         for user_id, item_list in enumerate(user_records):
+<<<<<<< HEAD
             
             tmp_train_sample, tmp_test_sample = train_test_split(item_list, test_size=test_ratio, random_state=seed)
+=======
+            tmp_train_sample, tmp_test_sample = train_test_split(item_list, test_size=test_ratio, random_state=seed)
+
+>>>>>>> 48d15d6 (Add files via upload)
             train_sample = []
             for place in item_list:
                 if place not in tmp_test_sample:
